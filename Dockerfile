@@ -1,30 +1,27 @@
-# First stage: build the Go app
-FROM golang:1.22.5 AS builder
+# Stage 1: Build the Go application
+FROM golang:1.22 as builder
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy go.mod and go.sum files to download dependencies
-COPY go.mod . 
-# Download dependencies
+# Copy the Go module files and download dependencies
+COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the source code
+# Copy the rest of the application code
 COPY . .
 
-# Build the Go binary
-RUN GOOS=linux GOARCH=amd64 go build -o main .
+# Build the Go application binary for Linux
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o hello-world-app main.go
 
-# Second stage: distroless
-FROM gcr.io/distroless/base
+# Stage 2: Create the final Distroless image
+FROM gcr.io/distroless/static-debian11
 
-# Copy the compiled binary from the builder stage
-COPY --from=builder /app/main /main
+# Copy the binary from the builder stage
+COPY --from=builder /app/hello-world-app /hello-world-app
 
-# Copy any necessary static files (if needed)
-COPY --from=builder /app/static /static
-
-# Expose the required port
+# Expose port 8080 for the application
 EXPOSE 8080
 
-# Command to run the Go binary
-CMD ["/main"]
+# Run the application
+ENTRYPOINT ["/hello-world-app"]
