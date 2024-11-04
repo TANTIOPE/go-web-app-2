@@ -4,7 +4,7 @@ image:
   repository: taantiope/go-web-app-2
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "11669377927"
+  tag: "11670781060"
 
 ingress:
   enabled: false
