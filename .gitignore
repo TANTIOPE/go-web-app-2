@@ -1,0 +1,14 @@
+# Ignore binary files generated from go build
+/go-web-app-2
+
+# Ignore build output directories
+/bin/
+/build/
+/dist/
+
+# Dependency directories (in case you use vendoring)
+vendor/
+
+# golangci-lint cache and other Go tool caches
+/.cache/
+*.out
